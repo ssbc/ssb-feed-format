@@ -1,0 +1,55 @@
+{
+  "name": "ssb-feed-format",
+  "version": "1.0.0",
+  "description": "devDependency to test feed formats",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssbc/ssb-feed-format.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ssbc/ssb-feed-format/issues"
+  },
+  "homepage": "https://github.com/ssbc/ssb-feed-format#readme",
+  "author": "Andre Staltz <contact@staltz.com>",
+  "contributors": [
+    "Anders Rune Jensen <arj03@protonmail.ch>"
+  ],
+  "license": "LGPL-3.0",
+  "keywords": [
+    "ssb"
+  ],
+  "engines": {
+    "node": ">=12"
+  },
+  "main": "index.js",
+  "files": [
+    "package.json.license",
+    "LICENSES/*",
+    "*.js"
+  ],
+  "dependencies": {
+    "fast-equals": "^4.0.1",
+    "ssb-ref": "^2.16.0"
+  },
+  "devDependencies": {
+    "c8": "^7.11.3",
+    "husky": "4.3",
+    "prettier": "^2.6.2",
+    "pretty-quick": "^3.1.3",
+    "ssb-keys": "^8.4.0",
+    "ssb-validate2": "^0.1.2",
+    "tap-arc": "^0.3.4",
+    "tape": "^5.5.3"
+  },
+  "scripts": {
+    "test": "tape test/*.js | tap-arc",
+    "format-code": "prettier --write \"*.js\"",
+    "format-code-staged": "pretty-quick --staged --pattern \"*.js\"",
+    "coverage": "c8 --reporter=lcov npm run test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format-code-staged"
+    }
+  }
+}
