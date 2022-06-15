@@ -96,6 +96,8 @@ Mint a new native message and return it, based on the inputs given in the `opts`
 - `opts.previous`: JS-encoded "KVT" of the previous message on this feed
 - `opts.hmacKey`: optional HMAC key
 
+The native message returned by this function SHOULD be already "valid" and we ASSUME it *would* pass the `validateSingle` function.
+
 ### `toNativeMsg(msg, encoding)`
 
 Given a `msg` encoded with `encoding`, this function should return a native message.
