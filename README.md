@@ -54,7 +54,8 @@ A **feed format** defines how to create messages that follow a particular *shape
   - `isNativeMsg`
   - `isAuthor`
 - Validation functions
-  - `validateSingle()` **required**
+  - `validate()` **required**
+  - `validateOOO()` **optional**
   - `validateBatch()` **optional**
   - `validateOOOBatch()` **optional**
 
@@ -96,7 +97,7 @@ Mint a new native message and return it, based on the inputs given in the `opts`
 - `opts.previous`: JS-encoded "KVT" of the previous message on this feed
 - `opts.hmacKey`: optional HMAC key
 
-The native message returned by this function SHOULD be already "valid" and we ASSUME it *would* pass the `validateSingle` function.
+The native message returned by this function SHOULD be already "valid" and we ASSUME it *would* pass the `validate` function.
 
 ### `toNativeMsg(msg, encoding)`
 
@@ -137,7 +138,7 @@ Given any JavaScript value `x`, this function should return `true` when it detec
 
 Given a string (a sigil ID or an SSB URI), this function should return `true` if the string is uniquely belonging to this feed format, otherwise it should return `false`.
 
-### `validateSingle(nativeMsg, previousNativeMsg, hmacKey, cb)`
+### `validate(nativeMsg, previousNativeMsg, hmacKey, cb)`
 
 Given a `nativeMsg`, its `previousNativeMsg` (in the feed's sequence of messages, also known as the "latest message", which COULD be `null`), and an optional `hmacKey`, this function should perform thorough validation of the `nativeMsg`, including cryptographic sig-chain verification. If validation passes, you should call `cb()` with no arguments. If validation failed, you should pass an error `err` when calling `cb(err)`.
 

@@ -201,7 +201,7 @@ test('toNativeMsg missing', (t) => {
   t.end();
 });
 
-test('validateSingle missing', (t) => {
+test('validate missing', (t) => {
   t.throws(() => {
     check(
       {
@@ -220,7 +220,7 @@ test('validateSingle missing', (t) => {
       },
       ssbKeys.generate,
     );
-  }, /requires "validateSingle" as a function/);
+  }, /requires "validate" as a function/);
   t.end();
 });
 
@@ -240,7 +240,7 @@ test('encodings missing "js"', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -264,7 +264,7 @@ test('isAuthor cant return undefined', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -288,7 +288,7 @@ test('isAuthor cant return true for everything', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -312,7 +312,7 @@ test('isNativeMsg must say "true" to a newNativeMsg output', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -336,7 +336,7 @@ test('isNativeMsg cant return true for everything', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -360,7 +360,7 @@ test('getFeedId must return a string', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -384,7 +384,7 @@ test('getFeedId must return an SSB URI or sigil', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -408,7 +408,7 @@ test('getFeedId must the correct feed ID, not a random one', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -432,7 +432,7 @@ test('getMsgId must return a string', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -456,7 +456,7 @@ test('getMsgId must return an SSB URI or a sigil ID', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -480,7 +480,7 @@ test('getSequence must return a number', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -504,7 +504,7 @@ test('toPlaintextBuffer must return a Buffer', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -528,7 +528,7 @@ test('fromNativeMsg must return an object', (t) => {
         fromNativeMsg: () => {},
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -552,7 +552,7 @@ test('fromNativeMsg requires msgVal.author', (t) => {
         fromNativeMsg: () => ({age: 10}),
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -576,7 +576,7 @@ test('fromNativeMsg requires msgVal.sequence', (t) => {
         fromNativeMsg: (nativeMsg) => ({author: nativeMsg.author, age: 10}),
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -604,7 +604,7 @@ test('fromNativeMsg requires msgVal.previous', (t) => {
         }),
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -633,7 +633,7 @@ test('fromNativeMsg requires a msgVal.previous string', (t) => {
         }),
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -662,7 +662,7 @@ test('fromNativeMsg requires msgVal.timestamp', (t) => {
         }),
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -692,7 +692,7 @@ test('fromNativeMsg requires msgVal.content', (t) => {
         }),
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );
@@ -723,7 +723,7 @@ test('fromNativeMsg and toNativeMsg must be inverse', (t) => {
         }),
         fromDecryptedNativeMsg: () => {},
         toNativeMsg: () => {},
-        validateSingle: () => {},
+        validate: () => {},
       },
       ssbKeys.generate,
     );

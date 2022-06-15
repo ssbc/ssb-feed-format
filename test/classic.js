@@ -78,7 +78,7 @@ const feedFormat = {
 
   validateBatch: validate2.validateBatch,
   validateOOOBatch: validate2.validateOOOBatch,
-  validateSingle: validate2.validateSingle,
+  validate: validate2.validateSingle,
 };
 
 test('classic format passes the checks', (t) => {

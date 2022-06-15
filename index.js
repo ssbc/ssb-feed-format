@@ -19,7 +19,8 @@ const Ref = require('ssb-ref');
  * @property {CallableFunction} fromNativeMsg
  * @property {CallableFunction} fromDecryptedNativeMsg
  * @property {CallableFunction} toNativeMsg
- * @property {CallableFunction} validateSingle
+ * @property {CallableFunction} validate
+ * @property {CallableFunction=} validateOOO
  * @property {CallableFunction=} validateBatch
  * @property {CallableFunction=} validateOOOBatch
  */
@@ -90,9 +91,9 @@ function assertHasAllRequiredProps(ff) {
     throw new Error(`Your feed format "${ff.name}" requires "toNativeMsg" as a function`);
   }
 
-  if (!ff.validateSingle || typeof ff.validateSingle !== 'function') {
+  if (!ff.validate || typeof ff.validate !== 'function') {
     // prettier-ignore
-    throw new Error(`Your feed format "${ff.name}" requires "validateSingle" as a function`);
+    throw new Error(`Your feed format "${ff.name}" requires "validate" as a function`);
   }
 }
 
