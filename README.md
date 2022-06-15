@@ -139,7 +139,7 @@ Given a string (a sigil ID or an SSB URI), this function should return `true` if
 
 ### `validateSingle(nativeMsg, previousNativeMsg, hmacKey, cb)`
 
-Given a `nativeMsg`, its `previousNativeMsg` (in the feed's sequence of messages, also known as the "latest message"), and an optional `hmacKey`, this function should perform thorough validation of the `nativeMsg`, including cryptographic sig-chain verification. If validation passes, you should call `cb()` with no arguments. If validation failed, you should pass an error `err` when calling `cb(err)`.
+Given a `nativeMsg`, its `previousNativeMsg` (in the feed's sequence of messages, also known as the "latest message", which COULD be `null`), and an optional `hmacKey`, this function should perform thorough validation of the `nativeMsg`, including cryptographic sig-chain verification. If validation passes, you should call `cb()` with no arguments. If validation failed, you should pass an error `err` when calling `cb(err)`.
 
 ### `validateBatch(nativeMsgs, previousNativeMsg, hmacKey, cb)`
 
