@@ -1,6 +1,6 @@
 {
   "name": "ssb-feed-format",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "devDependency to test feed formats",
   "repository": {
     "type": "git",
