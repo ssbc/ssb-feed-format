@@ -31,8 +31,10 @@ check(
   myFeedFormat,
   // Pass a function that generates correct keys for your feed format:
   () => ssbKeys.generate(null, null, 'myformat')
+  (err) => {
+    // `err` if the format is incorrect, else it is undefined
+  }
 )
-// `check` throws an error if the format is incorrect, else returns undefined
 ```
 
 ## Spec

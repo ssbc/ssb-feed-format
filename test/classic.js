@@ -78,14 +78,20 @@ const feedFormat = {
 
   validateBatch: validate2.validateBatch,
   validateOOOBatch: validate2.validateOOOBatch,
-  validate: validate2.validateSingle,
+  validate(nativeMsg, prevNativeMsg, hmacKey, cb) {
+    validate2.validateSingle(hmacKey, nativeMsg, prevNativeMsg, cb);
+  },
 };
 
 test('classic format passes the checks', (t) => {
-  t.doesNotThrow(() => {
-    check(feedFormat, () => ssbKeys.generate());
-  });
-  t.end();
+  check(
+    feedFormat,
+    () => ssbKeys.generate(),
+    (err) => {
+      t.error(err);
+      t.end();
+    },
+  );
 });
 
 test('corrupted fromNativeMsg is detected', (t) => {
@@ -94,10 +100,18 @@ test('corrupted fromNativeMsg is detected', (t) => {
     return {...nativeMsg, author: 'wrong'};
   };
 
-  t.throws(() => {
-    check(corruptedFeedFormat, () => ssbKeys.generate());
-  }, /fromNativeMsg\(\) JS-encoding must return an object with msgVal\.author/);
-  t.end();
+  check(
+    corruptedFeedFormat,
+    () => ssbKeys.generate(),
+    (err) => {
+      t.ok(err);
+      t.match(
+        err.message,
+        /fromNativeMsg\(\) JS-encoding must return an object with msgVal\.author/,
+      );
+      t.end();
+    },
+  );
 });
 
 test('corrupted toNativeMsg is detected', (t) => {
@@ -106,8 +120,16 @@ test('corrupted toNativeMsg is detected', (t) => {
     return Buffer.from(JSON.stringify(msg), 'utf-8');
   };
 
-  t.throws(() => {
-    check(corruptedFeedFormat, () => ssbKeys.generate());
-  }, /fromNativeMsg\(\) and toNativeMsg\(\) are not each other's inverse/);
-  t.end();
+  check(
+    corruptedFeedFormat,
+    () => ssbKeys.generate(),
+    (err) => {
+      t.ok(err);
+      t.match(
+        err.message,
+        /fromNativeMsg\(\) and toNativeMsg\(\) are not each other's inverse/,
+      );
+      t.end();
+    },
+  );
 });

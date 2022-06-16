@@ -30,7 +30,7 @@ const Ref = require('ssb-ref');
  */
 function assertHasAllRequiredProps(ff) {
   if (!ff.name || typeof ff.name !== 'string') {
-    throw new Error('Your feed feed requires the field "name" as a string');
+    throw new Error('Your feed format requires the field "name" as a string');
   }
 
   if (!ff.encodings || !Array.isArray(ff.encodings)) {
@@ -318,18 +318,34 @@ function assertFromDecrypted(feedFormat, keysFactory) {
   }
 }
 
-function check(feedFormat, keysFactory) {
-  assertHasAllRequiredProps(feedFormat);
-  assertEncodingsHasJS(feedFormat);
-  assertIsAuthor(feedFormat, keysFactory);
-  assertIsNativeMsg(feedFormat, keysFactory);
-  assertGetFeedId(feedFormat, keysFactory);
-  assertGetMsgId(feedFormat, keysFactory);
-  assertGetSequence(feedFormat, keysFactory);
-  assertPlaintextBuf(feedFormat, keysFactory);
-  assertFromNativeMsgToJS(feedFormat, keysFactory);
-  assertFromToInverses(feedFormat, keysFactory);
-  assertFromDecrypted(feedFormat, keysFactory);
+/**
+ * @param {FeedFormat} feedFormat
+ * @param {CallableFunction} keysFactory
+ */
+function assertNewNativeMsgValidated(feedFormat, keysFactory, cb) {
+  const opts = createDummyOpts(keysFactory);
+  const nativeMsg = feedFormat.newNativeMsg(opts);
+  feedFormat.validate(nativeMsg, null, null, cb);
+}
+
+function check(feedFormat, keysFactory, cb) {
+  try {
+    assertHasAllRequiredProps(feedFormat);
+    assertEncodingsHasJS(feedFormat);
+    assertIsAuthor(feedFormat, keysFactory);
+    assertIsNativeMsg(feedFormat, keysFactory);
+    assertGetFeedId(feedFormat, keysFactory);
+    assertGetMsgId(feedFormat, keysFactory);
+    assertGetSequence(feedFormat, keysFactory);
+    assertPlaintextBuf(feedFormat, keysFactory);
+    assertFromNativeMsgToJS(feedFormat, keysFactory);
+    assertFromToInverses(feedFormat, keysFactory);
+    assertFromDecrypted(feedFormat, keysFactory);
+  } catch (err) {
+    cb(err);
+    return;
+  }
+  assertNewNativeMsgValidated(feedFormat, keysFactory, cb);
 }
 
 module.exports = {
