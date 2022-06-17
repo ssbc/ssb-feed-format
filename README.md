@@ -105,9 +105,13 @@ The native message returned by this function SHOULD be already "valid" and we AS
 
 Given a `msg` encoded with `encoding`, this function should return a native message.
 
+We recommend that `encoding` is allowed be undefined, in which case it would default to the value `'js'`.
+
 ### `fromNativeMsg(nativeMsg, encoding)`
 
 Given a `nativeMsg`, this function should encode it with `encoding` and return the corresponding encoded message. For instance, typically `encoding` is `'js'` and in that case it should return a classic JavaScript SSB message object.
+
+We recommend that `encoding` is allowed be undefined, in which case it would default to the value `'js'`.
 
 ### `toPlaintextBuffer(opts)`
 
@@ -119,6 +123,8 @@ Useful in the context of decrypting your native message, this function takes a
 `plaintextBuf` (buffer, already decrypted from the ciphertext), a `nativeMsg`, and the target `encoding`, and should return the corresponding encoded message.
 
 This is typically used for "fitting in" the decrypted "content" back into the nativeMsg, as it appeared to be right before it was encrypted.
+
+We recommend that `encoding` is allowed be undefined, in which case it would default to the value `'js'`.
 
 ### `getFeedId(nativeMsg)`
 
