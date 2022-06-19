@@ -37,6 +37,14 @@ check(
 )
 ```
 
+You can also pass extra "opts" in case your feed format demands specific ones:
+
+```js
+check(myFeedFormat, generateKeys, {myExtraOpt: 123}, (err) => {
+  // ...
+})
+```
+
 ## Spec
 
 A **feed format** defines how to create messages that follow a particular *shape*. Every feed format is a plugin-like object with:

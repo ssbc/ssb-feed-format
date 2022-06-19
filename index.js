@@ -110,8 +110,9 @@ function assertEncodingsHasJS(feedFormat) {
 
 /**
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function createDummyOpts(keysFactory) {
+function createDummyOpts(keysFactory, extraOpts) {
   return {
     keys: keysFactory(),
     sequence: 1,
@@ -119,15 +120,17 @@ function createDummyOpts(keysFactory) {
     timestamp: Date.now(),
     hmacKey: null,
     content: {type: 'post', text: 'hello world'},
+    ...extraOpts,
   };
 }
 
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function assertIsNativeMsg(feedFormat, keysFactory) {
-  const opts = createDummyOpts(keysFactory);
+function assertIsNativeMsg(feedFormat, keysFactory, extraOpts) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   if (!feedFormat.isNativeMsg(nativeMsg)) {
     // prettier-ignore
@@ -158,11 +161,12 @@ function assertIsAuthor(feedFormat, keysFactory) {
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function assertGetFeedId(feedFormat, keysFactory) {
+function assertGetFeedId(feedFormat, keysFactory, extraOpts) {
   const keys = keysFactory();
   const feedId1 = keys.id;
-  const opts = createDummyOpts(() => keys);
+  const opts = createDummyOpts(() => keys, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   const feedId2 = feedFormat.getFeedId(nativeMsg);
   if (typeof feedId2 !== 'string') {
@@ -182,9 +186,10 @@ function assertGetFeedId(feedFormat, keysFactory) {
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function assertGetMsgId(feedFormat, keysFactory) {
-  const opts = createDummyOpts(keysFactory);
+function assertGetMsgId(feedFormat, keysFactory, extraOpts) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   const msgId = feedFormat.getMsgId(nativeMsg);
   if (typeof msgId !== 'string') {
@@ -200,9 +205,10 @@ function assertGetMsgId(feedFormat, keysFactory) {
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function assertGetSequence(feedFormat, keysFactory) {
-  const opts = createDummyOpts(keysFactory);
+function assertGetSequence(feedFormat, keysFactory, extraOpts) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   const sequence = feedFormat.getSequence(nativeMsg);
   if (sequence !== 1) {
@@ -214,9 +220,10 @@ function assertGetSequence(feedFormat, keysFactory) {
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function assertPlaintextBuf(feedFormat, keysFactory) {
-  const opts = createDummyOpts(keysFactory);
+function assertPlaintextBuf(feedFormat, keysFactory, extraOpts) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const plaintextBuf = feedFormat.toPlaintextBuffer(opts);
   if (!plaintextBuf || !Buffer.isBuffer(plaintextBuf)) {
     // prettier-ignore
@@ -227,9 +234,10 @@ function assertPlaintextBuf(feedFormat, keysFactory) {
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function assertFromNativeMsgToJS(feedFormat, keysFactory) {
-  const opts = createDummyOpts(keysFactory);
+function assertFromNativeMsgToJS(feedFormat, keysFactory, extraOpts) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   const msgVal = feedFormat.fromNativeMsg(nativeMsg, 'js');
   if (typeof msgVal !== 'object') {
@@ -274,9 +282,10 @@ function assertFromNativeMsgToJS(feedFormat, keysFactory) {
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
  */
-function assertFromToInverses(feedFormat, keysFactory) {
-  const opts = createDummyOpts(keysFactory);
+function assertFromToInverses(feedFormat, keysFactory, extraOpts) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   const msgVal = feedFormat.fromNativeMsg(nativeMsg, 'js');
   const nativeMsg2 = feedFormat.toNativeMsg(msgVal, 'js');
@@ -302,8 +311,8 @@ function assertFromToInverses(feedFormat, keysFactory) {
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
  */
-function assertFromDecrypted(feedFormat, keysFactory) {
-  const opts = createDummyOpts(keysFactory);
+function assertFromDecrypted(feedFormat, keysFactory, extraOpts) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   const msgVal1 = feedFormat.fromNativeMsg(nativeMsg, 'js');
   const plaintextBuf = feedFormat.toPlaintextBuffer(opts);
@@ -321,31 +330,35 @@ function assertFromDecrypted(feedFormat, keysFactory) {
 /**
  * @param {FeedFormat} feedFormat
  * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
+ * @param {CallableFunction} cb
  */
-function assertNewNativeMsgValidated(feedFormat, keysFactory, cb) {
-  const opts = createDummyOpts(keysFactory);
+function assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, cb) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   feedFormat.validate(nativeMsg, null, null, cb);
 }
 
-function check(feedFormat, keysFactory, cb) {
+function check(feedFormat, keysFactory, ...args) {
+  const extraOpts = typeof args[0] === 'function' ? {} : args[0];
+  const cb = typeof args[0] === 'function' ? args[0] : args[1];
   try {
     assertHasAllRequiredProps(feedFormat);
     assertEncodingsHasJS(feedFormat);
     assertIsAuthor(feedFormat, keysFactory);
-    assertIsNativeMsg(feedFormat, keysFactory);
-    assertGetFeedId(feedFormat, keysFactory);
-    assertGetMsgId(feedFormat, keysFactory);
-    assertGetSequence(feedFormat, keysFactory);
-    assertPlaintextBuf(feedFormat, keysFactory);
-    assertFromNativeMsgToJS(feedFormat, keysFactory);
-    assertFromToInverses(feedFormat, keysFactory);
-    assertFromDecrypted(feedFormat, keysFactory);
+    assertIsNativeMsg(feedFormat, keysFactory, extraOpts);
+    assertGetFeedId(feedFormat, keysFactory, extraOpts);
+    assertGetMsgId(feedFormat, keysFactory, extraOpts);
+    assertGetSequence(feedFormat, keysFactory, extraOpts);
+    assertPlaintextBuf(feedFormat, keysFactory, extraOpts);
+    assertFromNativeMsgToJS(feedFormat, keysFactory, extraOpts);
+    assertFromToInverses(feedFormat, keysFactory, extraOpts);
+    assertFromDecrypted(feedFormat, keysFactory, extraOpts);
   } catch (err) {
     cb(err);
     return;
   }
-  assertNewNativeMsgValidated(feedFormat, keysFactory, cb);
+  assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, cb);
 }
 
 module.exports = {
