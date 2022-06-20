@@ -76,7 +76,9 @@ const feedFormat = {
     }
   },
 
-  validateBatch: validate2.validateBatch,
+  validateBatch(nativeMsgs, prevNativeMsg, hmacKey, cb) {
+    validate2.validateBatch(hmacKey, nativeMsgs, prevNativeMsg, cb);
+  },
   validateOOOBatch: validate2.validateOOOBatch,
   validate(nativeMsg, prevNativeMsg, hmacKey, cb) {
     validate2.validateSingle(hmacKey, nativeMsg, prevNativeMsg, cb);

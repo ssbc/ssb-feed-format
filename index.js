@@ -339,6 +339,23 @@ function assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, cb) {
   feedFormat.validate(nativeMsg, null, null, cb);
 }
 
+/**
+ * @param {FeedFormat} feedFormat
+ * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
+ * @param {CallableFunction} cb
+ */
+function assertNewNativeMsgValidatedBatch(
+  feedFormat,
+  keysFactory,
+  extraOpts,
+  cb,
+) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
+  const nativeMsg = feedFormat.newNativeMsg(opts);
+  feedFormat.validateBatch([nativeMsg], null, null, cb);
+}
+
 function check(feedFormat, keysFactory, ...args) {
   const extraOpts = typeof args[0] === 'function' ? {} : args[0];
   const cb = typeof args[0] === 'function' ? args[0] : args[1];
@@ -358,7 +375,15 @@ function check(feedFormat, keysFactory, ...args) {
     cb(err);
     return;
   }
-  assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, cb);
+  assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, (err) => {
+    if (err) {
+      return cb(err);
+    } else if (feedFormat.validateBatch) {
+      assertNewNativeMsgValidatedBatch(feedFormat, keysFactory, extraOpts, cb);
+    } else {
+      cb();
+    }
+  });
 }
 
 module.exports = {
