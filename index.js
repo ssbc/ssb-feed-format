@@ -4,6 +4,7 @@
 
 const {deepEqual} = require('fast-equals');
 const Ref = require('ssb-ref');
+const multicb = require('multicb');
 
 /**
  * @typedef {Object} FeedFormat
@@ -333,7 +334,7 @@ function assertFromDecrypted(feedFormat, keysFactory, extraOpts) {
  * @param {Object} extraOpts
  * @param {CallableFunction} cb
  */
-function assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, cb) {
+function assertValidate(feedFormat, keysFactory, extraOpts, cb) {
   const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   feedFormat.validate(nativeMsg, null, null, cb);
@@ -345,15 +346,34 @@ function assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, cb) {
  * @param {Object} extraOpts
  * @param {CallableFunction} cb
  */
-function assertNewNativeMsgValidatedBatch(
-  feedFormat,
-  keysFactory,
-  extraOpts,
-  cb,
-) {
+function assertValidateBatch(feedFormat, keysFactory, extraOpts, cb) {
   const opts = createDummyOpts(keysFactory, extraOpts);
   const nativeMsg = feedFormat.newNativeMsg(opts);
   feedFormat.validateBatch([nativeMsg], null, null, cb);
+}
+
+/**
+ * @param {FeedFormat} feedFormat
+ * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
+ * @param {CallableFunction} cb
+ */
+function assertValidateOOO(feedFormat, keysFactory, extraOpts, cb) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
+  const nativeMsg = feedFormat.newNativeMsg(opts);
+  feedFormat.validateOOO(nativeMsg, null, cb);
+}
+
+/**
+ * @param {FeedFormat} feedFormat
+ * @param {CallableFunction} keysFactory
+ * @param {Object} extraOpts
+ * @param {CallableFunction} cb
+ */
+function assertValidateOOOBatch(feedFormat, keysFactory, extraOpts, cb) {
+  const opts = createDummyOpts(keysFactory, extraOpts);
+  const nativeMsg = feedFormat.newNativeMsg(opts);
+  feedFormat.validateOOOBatch([nativeMsg], null, cb);
 }
 
 function check(feedFormat, keysFactory, ...args) {
@@ -375,15 +395,20 @@ function check(feedFormat, keysFactory, ...args) {
     cb(err);
     return;
   }
-  assertNewNativeMsgValidated(feedFormat, keysFactory, extraOpts, (err) => {
-    if (err) {
-      return cb(err);
-    } else if (feedFormat.validateBatch) {
-      assertNewNativeMsgValidatedBatch(feedFormat, keysFactory, extraOpts, cb);
-    } else {
-      cb();
-    }
-  });
+
+  const done = multicb();
+  assertValidate(feedFormat, keysFactory, extraOpts, done());
+  if (feedFormat.validateBatch) {
+    assertValidateBatch(feedFormat, keysFactory, extraOpts, done());
+  }
+  if (feedFormat.validateOOO) {
+    assertValidateOOO(feedFormat, keysFactory, extraOpts, done());
+  }
+  if (feedFormat.validateOOOBatch) {
+    assertValidateOOOBatch(feedFormat, keysFactory, extraOpts, done());
+  }
+
+  done(cb);
 }
 
 module.exports = {

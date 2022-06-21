@@ -29,6 +29,7 @@
   ],
   "dependencies": {
     "fast-equals": "^4.0.1",
+    "multicb": "^1.2.2",
     "ssb-ref": "^2.16.0"
   },
   "devDependencies": {

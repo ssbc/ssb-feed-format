@@ -79,7 +79,12 @@ const feedFormat = {
   validateBatch(nativeMsgs, prevNativeMsg, hmacKey, cb) {
     validate2.validateBatch(hmacKey, nativeMsgs, prevNativeMsg, cb);
   },
-  validateOOOBatch: validate2.validateOOOBatch,
+  validateOOOBatch(nativeMsgs, hmacKey, cb) {
+    validate2.validateOOOBatch(hmacKey, nativeMsgs, cb);
+  },
+  validateOOO(nativeMsg, hmacKey, cb) {
+    validate2.validateOOOBatch(hmacKey, [nativeMsg], cb);
+  },
   validate(nativeMsg, prevNativeMsg, hmacKey, cb) {
     validate2.validateSingle(hmacKey, nativeMsg, prevNativeMsg, cb);
   },
@@ -105,6 +110,7 @@ test('corrupted fromNativeMsg is detected', (t) => {
   check(
     corruptedFeedFormat,
     () => ssbKeys.generate(),
+    {}, // extraOpts
     (err) => {
       t.ok(err);
       t.match(
