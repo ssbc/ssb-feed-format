@@ -6,6 +6,7 @@ const {deepEqual} = require('fast-equals');
 const Ref = require('ssb-ref');
 const multicb = require('multicb');
 
+const TEST_CONTENT = {type: 'post', text: 'hello world'};
 /**
  * @typedef {Object} FeedFormat
  * @property {string} name
@@ -120,7 +121,7 @@ function createDummyOpts(keysFactory, extraOpts) {
     previous: null,
     timestamp: Date.now(),
     hmacKey: null,
-    content: {type: 'post', text: 'hello world'},
+    content: TEST_CONTENT,
     ...extraOpts,
   };
 }
@@ -274,7 +275,8 @@ function assertFromNativeMsgToJS(feedFormat, keysFactory, extraOpts) {
     // prettier-ignore
     throw new Error(`Your feed format "${feedFormat.name}" fromNativeMsg() JS-encoding must return an object with msgVal.timestamp as a positive number but had "${timestamp}" instead`);
   }
-  if (!deepEqual(content, {type: 'post', text: 'hello world'})) {
+  const expectedContent = extraOpts.content || TEST_CONTENT;
+  if (!deepEqual(content, expectedContent)) {
     // prettier-ignore
     throw new Error(`Your feed format "${feedFormat.name}" fromNativeMsg() JS-encoding must return an object with msgVal.content as an object but had "${JSON.stringify(content)}" instead`);
   }

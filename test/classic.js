@@ -141,3 +141,20 @@ test('corrupted toNativeMsg is detected', (t) => {
     },
   );
 });
+
+test('customized extraOpts.content is allowed', (t) => {
+  check(
+    feedFormat,
+    () => ssbKeys.generate(),
+    {
+      content: {
+        type: 'about',
+        name: 'Alice',
+      },
+    },
+    (err) => {
+      t.error(err, 'no error from check()');
+      t.end();
+    },
+  );
+});
